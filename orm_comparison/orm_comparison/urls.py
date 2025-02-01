@@ -20,7 +20,9 @@ import django_orm.views as views
 from django.contrib.auth.views import LoginView, LogoutView
 import sqlalchemy_orm.views as views_sa
 
+
 urlpatterns = [
+    path('__debug__/', include('debug_toolbar.urls')),
     path('admin/', admin.site.urls),
     path('register/', views.register, name='register'),
     path('login/', LoginView.as_view(

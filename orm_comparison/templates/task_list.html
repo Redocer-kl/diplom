@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Your Tasks</h2>
-<a href="{% url 'add_task' %}" class="btn btn-success mb-3">Add New Task</a>
+<h2>Твои задачи</h2>
+<a href="{% url 'add_task' %}" class="btn btn-success mb-3">Добавить задачу</a>
 <ul class="list-group">
     {% for task in tasks %}
     <li class="list-group-item {% if task.is_completed %}list-group-item-success{% endif %}">
@@ -16,12 +16,12 @@
                 <form action="{% url 'toggle_task' task.id %}" method="post" class="d-inline">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm {% if task.is_completed %}btn-outline-secondary{% else %}btn-outline-success{% endif %}">
-                        {% if task.is_completed %}Undo{% else %}Complete{% endif %}
+                        {% if task.is_completed %}Не сделал{% else %}Сделал{% endif %}
                     </button>
                 </form>
                 <form action="{% url 'delete_task' task.id %}" method="post" class="d-inline">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
                 </form>
             </div>
         </div>

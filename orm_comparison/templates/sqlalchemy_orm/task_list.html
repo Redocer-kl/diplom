@@ -1,8 +1,8 @@
 {% extends "sqlalchemy_orm/base.html" %}
 
 {% block content %}
-<h2>Your Tasks</h2>
-<a href="{% url 'sa_add_task' %}" class="btn btn-success mb-3">Add New Task</a>
+<h2>Твои задачи</h2>
+<a href="{% url 'sa_add_task' %}" class="btn btn-success mb-3">Добавить задачу</a>
 <ul class="list-group">
     {% for task in tasks %}
     <li class="list-group-item {% if task.is_completed %}list-group-item-success{% endif %}">
@@ -16,18 +16,18 @@
                 <form action="{% url 'sa_toggle_task' task.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm {% if task.is_completed %}btn-outline-secondary{% else %}btn-outline-success{% endif %}">
-                        {% if task.is_completed %}Undo{% else %}Complete{% endif %}
+                        {% if task.is_completed %}Не выполнил{% else %}Выполнил{% endif %}
                     </button>
                 </form>
                 <form action="{% url 'sa_delete_task' task.id %}" method="post">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Удалить</button>
                 </form>
             </div>
         </div>
     </li>
     {% empty %}
-    <li class="list-group-item">No tasks yet.</li>
+    <li class="list-group-item">Еще не добавлены задачи</li>
     {% endfor %}
 </ul>
 {% endblock %}

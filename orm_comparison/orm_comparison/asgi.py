@@ -1,5 +1,5 @@
 """
-ASGI config for orm_comparison project.
+ASGI config for module_19 project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 

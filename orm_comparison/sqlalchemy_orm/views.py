@@ -3,8 +3,10 @@ from .database import get_db
 from .models import User, Task
 from .forms import RegistrationForm, LoginForm, TaskForm
 from django.contrib import messages
+import time
 
 def register(request):
+    start_time = time.time()
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
@@ -20,9 +22,12 @@ def register(request):
             return redirect('sa_login')
     else:
         form = RegistrationForm()
+    end_time = time.time()
+    print(f"Register sa: {end_time - start_time}")
     return render(request, 'sqlalchemy_orm/register.html', {'form': form})
 
 def login(request):
+    start_time = time.time()
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -35,16 +40,22 @@ def login(request):
                 messages.error(request, 'Invalid credentials')
     else:
         form = LoginForm()
+    end_time = time.time()
+    print(f"Login sa: {end_time - start_time}")
     return render(request, 'sqlalchemy_orm/login.html', {'form': form})
 
 def task_list(request):
+    start_time = time.time()
     if 'user_id' not in request.session:
         return redirect('sa_login')
     db = next(get_db())
     tasks = db.query(Task).filter_by(user_id=request.session['user_id']).all()
-    return render(request, 'sqlalchemy_orm/task_list.html', {'tasks': tasks})
+    end_time = time.time()
+    print(f"Tasklist sa: {end_time - start_time}")
+    return render(request, 'sqlalchemy_orm/task_list.html', {'tasks': tasks, })
 
 def add_task(request):
+    start_time = time.time()
     if 'user_id' not in request.session:
         return redirect('sa_login')
     if request.method == 'POST':
@@ -61,13 +72,17 @@ def add_task(request):
             return redirect('sa_task_list')
     else:
         form = TaskForm()
+    end_time = time.time()
+    print(f"Add task sa: {end_time - start_time}")
     return render(request, 'sqlalchemy_orm/add_task.html', {'form': form})
 
 
 def toggle_task(request, task_id):
+
     if 'user_id' not in request.session:
         return redirect('sa_login')
 
+    start_time = time.time()
     db = next(get_db())
     task = db.query(Task).filter_by(id=task_id, user_id=request.session['user_id']).first()
 
@@ -77,13 +92,15 @@ def toggle_task(request, task_id):
 
     task.toggle_complete()
     db.commit()
+    end_time = time.time()
+    print(f"Toggle sa: {end_time - start_time}")
     return redirect('sa_task_list')
 
 
 def delete_task(request, task_id):
     if 'user_id' not in request.session:
         return redirect('sa_login')
-
+    start_time = time.time()
     db = next(get_db())
     task = db.query(Task).filter_by(id=task_id, user_id=request.session['user_id']).first()
 
@@ -93,4 +110,6 @@ def delete_task(request, task_id):
 
     task.delete(db)
     db.commit()
+    end_time = time.time()
+    print(f"Delete sa: {end_time - start_time}")
     return redirect('sa_task_list')
