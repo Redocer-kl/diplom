@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .database import get_db
-from .models import User
+from .models import User, Task
 from .forms import RegistrationForm, LoginForm, TaskForm
 from django.contrib import messages
 
@@ -63,10 +63,34 @@ def add_task(request):
         form = TaskForm()
     return render(request, 'sqlalchemy_orm/add_task.html', {'form': form})
 
+
 def toggle_task(request, task_id):
-    # ... аналогично Django ORM, но с SQLAlchemy-сессией
-    pass
+    if 'user_id' not in request.session:
+        return redirect('sa_login')
+
+    db = next(get_db())
+    task = db.query(Task).filter_by(id=task_id, user_id=request.session['user_id']).first()
+
+    if not task:
+        messages.error(request, 'Task not found')
+        return redirect('sa_task_list')
+
+    task.toggle_complete()
+    db.commit()
+    return redirect('sa_task_list')
+
 
 def delete_task(request, task_id):
-    # ... аналогично Django ORM
-    pass
+    if 'user_id' not in request.session:
+        return redirect('sa_login')
+
+    db = next(get_db())
+    task = db.query(Task).filter_by(id=task_id, user_id=request.session['user_id']).first()
+
+    if not task:
+        messages.error(request, 'Task not found')
+        return redirect('sa_task_list')
+
+    task.delete(db)
+    db.commit()
+    return redirect('sa_task_list')

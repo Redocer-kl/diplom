@@ -1,16 +1,28 @@
-from flask_wtf import FlaskForm  # Если используете Flask, для Django нужны свои формы
-from wtforms import StringField, PasswordField, TextAreaField
-from wtforms.validators import DataRequired, Email
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from .models import User  # Ваша модель User из SQLAlchemy
 
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
+# Форма для регистрации (адаптирована под SQLAlchemy)
+class RegistrationForm(forms.Form):
+    username = forms.CharField(max_length=50)
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+    password_confirm = forms.CharField(widget=forms.PasswordInput)
 
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        password_confirm = cleaned_data.get("password_confirm")
 
-class TaskForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    description = TextAreaField('Description')
+        if password != password_confirm:
+            raise forms.ValidationError("Passwords do not match!")
+
+# Форма для входа
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=50)
+    password = forms.CharField(widget=forms.PasswordInput)
+
+# Форма для добавления задачи
+class TaskForm(forms.Form):
+    title = forms.CharField(max_length=200)
+    description = forms.CharField(widget=forms.Textarea, required=False)

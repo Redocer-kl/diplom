@@ -28,3 +28,9 @@ class Task(Base):
     is_completed = Column(Boolean, default=False)
     created_at = Column(DateTime, default=datetime.utcnow)
     user_id = Column(Integer, ForeignKey('users.id'))
+
+    def toggle_complete(self):
+        self.is_completed = not self.is_completed
+
+    def delete(self, db):
+        db.delete(self)

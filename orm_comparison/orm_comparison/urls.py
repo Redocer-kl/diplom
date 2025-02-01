@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 import django_orm.views as views
 from django.contrib.auth.views import LoginView, LogoutView
+import sqlalchemy_orm.views as views_sa
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,4 +32,11 @@ urlpatterns = [
     path('tasks/add/', views.add_task, name='add_task'),
     path('tasks/<int:task_id>/toggle/', views.toggle_task, name='toggle_task'),
     path('tasks/<int:task_id>/delete/', views.delete_task, name='delete_task'),
+    path('sa/logout/', LogoutView.as_view(template_name='sqlalchemy_orm/logout.html'), name='sa_logout'),
+    path('sa/register/', views_sa.register, name='sa_register'),
+    path('sa/login/',views_sa.login, name='sa_login'),
+    path('sa/tasks/', views_sa.task_list, name='sa_task_list'),
+    path('sa/tasks/add/', views_sa.add_task, name='sa_add_task'),
+    path('sa/tasks/<int:task_id>/toggle/', views_sa.toggle_task, name='sa_toggle_task'),
+    path('sa/tasks/<int:task_id>/delete/', views_sa.delete_task, name='sa_delete_task'),
 ]

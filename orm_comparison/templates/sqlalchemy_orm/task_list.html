@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+{% extends "sqlalchemy_orm/base.html" %}
 
 {% block content %}
 <h2>Your Tasks</h2>
-<a href="{% url 'add_task' %}" class="btn btn-success mb-3">Add New Task</a>
+<a href="{% url 'sa_add_task' %}" class="btn btn-success mb-3">Add New Task</a>
 <ul class="list-group">
     {% for task in tasks %}
     <li class="list-group-item {% if task.is_completed %}list-group-item-success{% endif %}">
@@ -10,16 +10,16 @@
             <div>
                 <h5>{{ task.title }}</h5>
                 <p class="mb-1">{{ task.description }}</p>
-                <small class="text-muted">{{ task.created_at|date:"d.m.Y H:i" }}</small>
+                <small class="text-muted">{{ task.created_at|date:"d.m.Y H:i"  }}</small>
             </div>
             <div class="btn-group">
-                <form action="{% url 'toggle_task' task.id %}" method="post" class="d-inline">
+                <form action="{% url 'sa_toggle_task' task.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm {% if task.is_completed %}btn-outline-secondary{% else %}btn-outline-success{% endif %}">
                         {% if task.is_completed %}Undo{% else %}Complete{% endif %}
                     </button>
                 </form>
-                <form action="{% url 'delete_task' task.id %}" method="post" class="d-inline">
+                <form action="{% url 'sa_delete_task' task.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                 </form>
