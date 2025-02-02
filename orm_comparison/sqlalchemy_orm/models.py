@@ -11,7 +11,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(50), unique=True)
     email = Column(String(100), unique=True)
-    password_hash = Column(String(128))  # Храним хэш пароля
+    password_hash = Column(String(128))
     tasks = relationship('Task', backref='user', lazy='dynamic')
 
     def set_password(self, password):
